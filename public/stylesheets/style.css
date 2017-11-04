@@ -1,0 +1,20 @@
+/*body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}*/
+
+#user {
+	text-align: right;
+	line-height: 50px;
+	
+}
+
+#user span {
+	color: red;
+	font-size: 20px;
+}
+

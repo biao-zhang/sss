@@ -1,0 +1,218 @@
+<!doctype>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>cart</title>
+		
+		<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="/stylesheets/style.css" rel="stylesheet" media="screen">
+      	<script src="/javascripts/jquery-2.1.1.min.js" type="text/javascript"></script>
+      	<script src="/javascripts/bootstrap.min.js" type="text/javascript"></script><!--这是干嘛的-->
+		<style type="text/css">
+			.panel-heading {
+				height: 45px;
+			}
+
+			.panel {
+				width: 900px;
+			}
+
+			.panel-title {
+				font-size: 20px;
+				font-weight: bold;
+				float: left;
+			}
+
+			.panel-heading .btn-xs {
+				margin-right: 30px;
+			}
+
+			.cart-heading {
+				line-height: 40px;
+				background-color: #EFEDED;
+				padding-left: 10px;
+			}
+
+			.cart-heading>span {
+				margin-left: 160px;
+			}
+
+			.cart-body {
+				list-style-type: none;
+				margin: 0;
+				padding-left: 10px;
+			}
+
+			.cart-body li {
+				overflow: hidden;
+				margin-top: 30px;
+			}
+
+			.cart-body li div {
+				float: left;
+				text-align: center;
+			}
+
+			.cart-body li div:nth-child(1) {
+				width: 100px;
+				text-align: left;
+			}
+
+			.cart-body li div:nth-child(2n+1){
+				line-height: 50px;
+			}
+
+			.cart-body li div+div {
+				width: 100px;
+				margin-left: 85px;
+			}
+
+			.cart-footer {
+				margin-top: 20px;
+				text-align: right;
+				height: 35px;
+			}
+
+			.cart-footer span {
+				margin-right: 50px;
+				color: red;
+				font-size: 25px;
+			}
+
+			.cart-footer .btn {
+				width: 130px;
+			}
+			
+		</style>
+		<script type="text/javascript">
+			$(function () {
+				//全选
+				$('#chkAll').click(function () {
+					var self = $(this);
+					$('.chkItem').each(function () {
+						$(this).prop('checked', self.is(':checked'));
+					});
+					tamount();
+				});
+				//单选
+				$('.chkItem').click(function () {
+					var isCheck = $('.chkItem:not(:checked)').length ? false : true;
+					$('#chkAll').prop('checked', isCheck);
+					tamount();
+				});
+				//商品+-
+				$('.quantity a').click(function () {
+					var self = $(this);
+					var num = parseFloat(self.siblings('input').val());
+					var type = $(this).attr('data-type');
+					
+					if (type == 'add') {
+						num += 1;
+					} else if (type == 'substr') {
+						if (num > 1) {
+							num -= 1;
+						} else {
+							return false;
+						}
+					}
+					self.siblings('input').val(num);
+					tamount();
+				});
+				//总计
+				function tamount() {
+					var sum = 0;
+					$('.chkItem:checked').each(function () {
+						var self = $(this);
+						var price = self.attr('data-price');
+						var index = self.attr('data-index');
+						var quantity = $('#Q'+index).val()
+						sum += parseFloat(price)*parseFloat(quantity);
+					});
+					$('#Memory').text('￥' + sum + '.00');
+				}
+
+				//结算
+				$('#endCount').click(function () {
+					$('.chkItem:checked').each(function () {
+						var self = $(this);
+						var index = self.attr('data-index'),
+						    cid = self.attr('data-id');
+						var quantity = $('#Q'+index).val(),
+						    data = {'cid': cid, 'cnum': quantity};
+						$.ajax({
+						 	type: 'post',
+						 	url: '/cart/clearing',
+						 	data: data,
+						 	success: function () {
+						 		alert('success');
+						 	},
+						 	error: function () {
+						 		alert('error');
+						 	}
+						});
+					});
+				});	
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div id="user">Welcome, <span><%- user.name %></span></div>
+				<div class="col-lg-6 col-lg-offset-1">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="panel-title">
+								<span>购物车</span>
+							</div>
+							<div style="float: right">
+								<a href="home" class="btn btn-xs btn-success">返回商品页</a>
+								<a href="logout" class="btn btn-xs btn-info">退出</a>
+							</div>
+						</div>
+						<div class="panel-body">
+							<div class="cart-heading">
+								<div style="display: inline-block;">
+									<input id="chkAll" type="checkbox" />
+									<span>全选</span>
+								</div>
+								<span>商品</span>
+								<span>价格</span>
+								<span>数量</span>
+								<span>操作</span>
+							</div>
+							<ul class="cart-body">
+								<% for (var i in carts) {if(!carts[i].sId) continue %>
+								<li>
+									<div>
+										<input data-id="<%=carts[i]._id %>" data-price="<%=carts[i].sPrice%>" data-index="<%=i %>" class="chkItem " type="checkbox" />
+										<span><%=carts[i].sName %></span>
+									</div>
+									<div>
+										<img style="width:40px;height:50px;" src="/images/<%=carts[i].sImgSrc %>" />
+									</div>
+									<div>
+										<span><%=carts[i].sPrice %></span>
+									</div>
+									<div class="quantity" style="padding: 12px 0">
+										<a data-type="add" class="btn btn-default btn-xs" href="javascript:void(0)">+</a>
+										<input id="Q<%=i %>" class="cNum" style="width: 40px;" type="text" value="<%=carts[i].sQuantity %>" />
+										<a data-type="substr" class="btn btn-default btn-xs" href="javascript:void(0)">-</a>
+									</div>
+									<div style="padding: 12px 0">
+										<a href="/delCart/<%=carts[i]._id %>"  class="btn btn-primary btn-xs" href="">删除</a>
+									</div>
+								</li>
+								<% } %>
+							</ul>
+							<div class="cart-footer">
+								总计：<span id="Memory">￥0.00</span>
+								<input id="endCount" type="button" class="btn btn-success" value="结算" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

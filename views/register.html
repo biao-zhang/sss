@@ -1,0 +1,83 @@
+<!DOCTYPE>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>register</title>
+		<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+      	<script src="/javascripts/jquery-2.1.1.min.js" type="text/javascript"></script>
+      	<script src="/javascripts/bootstrap.min.js" type="text/javascript"></script>
+		<style type="text/css">
+			.container{
+				margin-top: 100px;
+			}
+
+			.panel-title {
+				font-weight: bold;
+				font-size: 24px;
+			}
+			
+			.panel-body{
+				padding: 30px 50px 0 50px;
+			}
+			.btn-primary{
+				float: right;
+				margin-top: 20px;
+			}	
+		</style>
+
+		<script type="text/javascript">
+			$(function () {
+				$('#btn').click(function () {
+					//var tip = $('.tip');
+					var user = $('#user').val();
+					var password = $('#password').val();
+					var _password = $('#_password').val();
+					var postData = {"uname": user, "pwd": password, "_pwd": _password};
+					$.ajax({
+						type: 'post',
+						url: '/register',
+						data: postData,
+						success: function (data, status) {
+								location.href = 'login';
+						},
+						error: function (err, status) {
+								alert('注册失败');
+						}
+					});
+				
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-lg-offset-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="panel-title">用户注册</div>
+						</div>
+						<div class="panel-body">
+							<form>
+								<div class="form-group">
+									<input id="user" class="form-control" type="text" placeholder="用户名" />
+								</div>
+								<div class="form-group">
+									<input id="password" class="form-control" type="password" placeholder="密码" />
+								</div>
+								<div class="form-group">
+									<input id="_password" class="form-control" type="password" placeholder="确认密码" />
+								</div>
+								<div class="form-group">
+									<input id="btn" class="btn btn-success btn-block" type="button" value="注册" />
+									<a href="/" class="btn btn-primary">登陆</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+	</body>
+</html>

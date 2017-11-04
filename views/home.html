@@ -1,0 +1,113 @@
+<!doctype>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>home</title>
+		
+		<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="/stylesheets/style.css" rel="stylesheet" media="screen">
+      	<script src="/javascripts/jquery-2.1.1.min.js" type="text/javascript"></script>
+      	<script src="/javascripts/bootstrap.min.js" type="text/javascript"></script><!--这是干嘛的-->
+		<style type="text/css">
+
+			
+			.panel {
+				width: 900px;
+			}
+
+			.panel-title {
+				font-size: 20px;
+				font-weight: bold;
+			}
+
+			.panel-heading {
+				height: 45px;
+			}
+
+			.btn-xs {
+				margin-right: 30px;
+			}
+
+			.spys {
+				list-style-type: none;
+			}
+
+			.spys li {
+				display: inline-block;
+				margin: 10px;
+				width: 180px;
+				height: 230px;
+			}
+
+			.spys li div {
+				
+				margin-bottom: 10px;
+			}
+
+			.spys img {
+				width: 80px;
+				height: 100px;
+			}
+
+			
+		</style>
+		<script type="text/javascript">
+			$(function () {
+				$('.aBtn').click(function () {
+					var url = $(this).attr('data-href');
+					//alert(url);
+					//我遍历干嘛啊
+					$.ajax({
+						type: 'get',
+						url: url,
+						success: function () {
+							alert('加入购物车成功');
+						},
+						error: function () {
+							alert('加入失败');
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div id="user">Welcome, <span><%- user.name %></span></div>
+				<div class="col-lg-6 col-lg-offset-2">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="panel-title" style="float:left">
+								<span>商品展示页</span>
+							</div>
+							<div style="float:right">
+								<a href="addCommodity" class="btn btn-xs btn-success">添加商品</a>
+								<a href="cart" class="btn btn-xs btn-success">购物车</a>
+								<a href="logout" class="btn btn-xs btn-info">退出</a>
+							</div>
+						</div>
+						<div class="panel-body">
+							<ul class="spys">
+								<% for (var i in addCommoditys) {if (!addCommoditys[i].cname) continue; %>
+								<li>
+									<div>
+										<img  src="/images/<%= addCommoditys[i].imgSrc %>">
+									</div>
+									<div>
+										<span><%= addCommoditys[i].cname %></span>
+										<span style="color: red">￥<%= addCommoditys[i].cprice %></span>
+									</div>
+									<div>
+										<a href="javascript:void(0)" data-href="/addToCart/<%= addCommoditys[i]._id %>" class="btn btn-success aBtn">加入购物车</a>
+									</div>
+								</li>
+								<% } %>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

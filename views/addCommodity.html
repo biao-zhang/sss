@@ -1,0 +1,72 @@
+<!doctype>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>addCommodity</title>
+		
+		<link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="/stylesheets/style.css" rel="stylesheet" media="screen">
+      	<script src="/javascripts/jquery-2.1.1.min.js" type="text/javascript"></script>
+      	<script src="/javascripts/bootstrap.min.js" type="text/javascript"></script><!--这是干嘛的-->
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			$(function () {
+				var add = $('#addCommodity');
+				add.click(function () {
+					var add = $('#addCommodity');
+					var cprice = $('#cprice').val();
+					var cname = $('#cname').val();
+					var imgSrc = 'xmsz-' + Math.floor(Math.random()*5+1) + '.jpg';
+					var data = {'cname': cname, 'cprice': cprice + '.00', 'imgSrc': imgSrc}
+					$.ajax({
+						type: 'post',
+						url: '/addCommodity',
+						data: data,
+						success: function (data, status) {
+							location.href = '/addCommodity';
+							alert('添加成功');
+						},
+						error: function (err, status) {
+							alert('添加失败');
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		
+		<div class="container">
+			<div class="row">
+				<div id="user">Welcome, <span><%- user.name %></span></div>
+				<div class="col-lg-6 col-lg-offset-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="panel-title">
+								<h1>添加商品</h1>
+							</div>
+							<div style="text-align: right">
+								<a href="home" class="btn btn-xs btn-success">返回商品页</a>
+							</div>
+						</div>
+						<div class="panel-body">
+							<form>
+								<div class="form-group">
+									<input id="cname" class="form-control" type="text" placeholder="商品名称" />
+								</div>
+								<div class="form-group">
+									<input id="cprice" class="form-control" type="text" placeholder="商品价格" />
+								</div>
+								<div class="form-group">
+									<input id="addCommodity" class="btn btn-success btn-block" type="button" value="添加商品" />
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
